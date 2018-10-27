@@ -24,10 +24,14 @@ public class graph : MonoBehaviour
 
 
     float gravForce = Ball.gravitinal_force;
-    float heightBall =2;
+    float heightBall = 1;
     float massBall = Ball.mass;
     int j = 0;
 
+
+    float time = 0.50f;
+    int i = 0, k = 0;
+    Boolean PE_flag = false, KE_flag = false;
 
 
     void Start()
@@ -81,25 +85,72 @@ public class graph : MonoBehaviour
     //Update is called once per frame
     void Update()
     {
-        if (j == 3)
+        if (j ==3)
         {
             return;
         }
         if (flag == false)
         {
-            for (int i = 0; position_PE.z > -4.3f; i++)
+            while (PE_flag == false || KE_flag == false)
             {
-                GameObject test_PE = Instantiate(textObj);
-                test_PE.GetComponent<Renderer>().material.color = Color.blue;
-                position_PE.x += 0.1f;
+                if (time >= 0)
+                {
+                    time -= Time.deltaTime;
+                    return;
 
-                position_PE.z -= (float)Math.Log(0.01f * massBall * i * i * i * gravForce + 1, 1000000);
+                }
+                else
+                {
+                    if (position_PE.z > -4.3f)
+                    {
+                        GameObject test_PE = Instantiate(textObj);
+                        test_PE.GetComponent<Renderer>().material.color = Color.blue;
+                        position_PE.x += 0.1f;
+
+                        position_PE.z -= (float)Math.Log(0.01f * massBall * i * i * i * gravForce + 1, 1000000);
 
 
-                test_PE.transform.localPosition = position_PE;
-                test_PE.transform.localScale = scale;
-                test_PE.transform.SetParent(transform, false);
+                        test_PE.transform.localPosition = position_PE;
+                        test_PE.transform.localScale = scale;
+                        test_PE.transform.SetParent(transform, false);
+                    }
+                    else
+                    {
+                        PE_flag = true;
+                    }
+
+
+
+
+                    if (position_KE.z < position.z)
+                    {
+                        GameObject test_KE = Instantiate(textObj);
+                        test_KE.GetComponent<Renderer>().material.color = Color.red;
+                        position_KE.x += 0.1f;
+
+                        position_KE.z += (float)Math.Log(0.01f * massBall * i * i * i * gravForce + 1, 1000000);
+
+
+                        test_KE.transform.localPosition = position_KE;
+                        test_KE.transform.localScale = scale;
+                        test_KE.transform.SetParent(transform, false);
+                    }
+                    else
+                    {
+                        KE_flag = true;
+                    }
+                    i++;
+                    time = 0.50f;
+                }
             }
+            if (PE_flag == true && KE_flag == true)
+            {
+                flag = true;
+                k = 0;
+                j++;
+                Debug.Log("--------Flag is True---------");
+            }
+
 
             GameObject test_PE_1 = Instantiate(textObj);
             test_PE_1.GetComponent<Renderer>().material.color = Color.blue;
@@ -112,51 +163,67 @@ public class graph : MonoBehaviour
             test_PE_1.transform.SetParent(transform, false);
 
 
-            for (int i = 0; position_KE.z < position.z; i++)
-            {
-                GameObject test_KE = Instantiate(textObj);
-                test_KE.GetComponent<Renderer>().material.color = Color.red;
-                position_KE.x += 0.1f;
-
-                position_KE.z += (float)Math.Log(0.01f * massBall * i * i * i * gravForce + 1, 1000000);
-                Debug.Log("---Position Z is ---:" + position_KE.z);
-
-                test_KE.transform.localPosition = position_KE;
-                test_KE.transform.localScale = scale;
-                test_KE.transform.SetParent(transform, false);
-            }
-
-            flag = true;
         }
         else
         {
-            for (int i = 0; position_PE.z < position.z; i++)
+            while (PE_flag == true || KE_flag == true)
             {
-                GameObject test_PE = Instantiate(textObj);
-                test_PE.GetComponent<Renderer>().material.color = Color.blue;
-                position_PE.x += 0.1f;
+                if (time >= 0)
+                {
+                    time -= Time.deltaTime;
+                    return;
 
-                position_PE.z += (float)Math.Log(0.01f * massBall * i * i * i * gravForce + 1, 1000000);
-                Debug.Log("---Position Z is ---:" + position_PE.z);
+                }
+                else
+                {
+                    if (position_PE.z < position.z)
+                    {
+                        GameObject test_PE = Instantiate(textObj);
+                        test_PE.GetComponent<Renderer>().material.color = Color.blue;
+                        position_PE.x += 0.1f;
 
-                test_PE.transform.localPosition = position_PE;
-                test_PE.transform.localScale = scale;
-                test_PE.transform.SetParent(transform, false);
+                        position_PE.z += (float)Math.Log(0.01f * massBall * k * k * k * gravForce + 1, 1000000);
+
+
+                        test_PE.transform.localPosition = position_PE;
+                        test_PE.transform.localScale = scale;
+                        test_PE.transform.SetParent(transform, false);
+                    }
+                    else
+                    {
+                        PE_flag = false;
+                    }
+
+
+
+
+                    if (position_KE.z > -4.3f)
+                    {
+                        GameObject test_KE = Instantiate(textObj);
+                        test_KE.GetComponent<Renderer>().material.color = Color.red;
+                        position_KE.x += 0.1f;
+
+                        position_KE.z -= (float)Math.Log(0.01f * massBall * k * k * k * gravForce + 1, 1000000);
+
+                        test_KE.transform.localPosition = position_KE;
+                        test_KE.transform.localScale = scale;
+                        test_KE.transform.SetParent(transform, false);
+                    }
+                    else
+                    {
+                        KE_flag = false;
+                    }
+                    k++;
+                    time = 0.50f;
+                }
             }
-
-            for (int i = 0; position_KE.z > -4.3f; i++)
+            if (PE_flag == false && KE_flag == false)
             {
-                GameObject test_KE = Instantiate(textObj);
-                test_KE.GetComponent<Renderer>().material.color = Color.red;
-                position_KE.x += 0.1f;
-
-                position_KE.z -= (float)Math.Log(0.01f * massBall * i * i * i * gravForce + 1, 1000000);
-
-                test_KE.transform.localPosition = position_KE;
-                test_KE.transform.localScale = scale;
-                test_KE.transform.SetParent(transform, false);
+                flag = false;
+                i = 0;
+                
+                Debug.Log("--------ELSE Flag is False---------");
             }
-
             GameObject test_KE_1 = Instantiate(textObj);
             test_KE_1.GetComponent<Renderer>().material.color = Color.red;
             position_KE.x += 0.2f;
@@ -168,9 +235,6 @@ public class graph : MonoBehaviour
             test_KE_1.transform.SetParent(transform, false);
 
 
-
-            flag = false;
         }
-        j++;
     }
 }

@@ -24,7 +24,7 @@ public class Ball : MonoBehaviour
     public static float gravitinal_force = 9.8f;
 
 
-    float time = 5.00f;
+    float time = 0.00f;
     bool flag = false;
     float value = 0.005f;
     float YValue;
